@@ -4,10 +4,10 @@ Discrete-Time Implementation of Robust to Early Termination Model Predictive Con
 # Implementation
 To implement the Discrete Robust to Early Termination Model Predictive Control (DisREAP), follow these steps:
 
-Extract the contents of the YALMIP zip file in the same directory.
-Run the DisREAP_UI function.
-Import your system and desired configurations.
-Execute the package.
+1. Extract the contents of the YALMIP zip file in the same directory.
+2. Run the DisREAP_UI function.
+3. Import your system and desired configurations.
+4. Execute the package.
 For guidance, there are two examples included:
 
 The first example is implemented on the Parrot Bebop 2 drone.
