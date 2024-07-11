@@ -1,24 +1,7 @@
-# MPC
-Discrete-Time Implementation of Robust to Early Termination Model Predictive Control
-
-# Implementation
-To implement the Discrete Robust to Early Termination Model Predictive Control (DisREAP), follow these steps:
-
-1. Extract the contents of the YALMIP zip file in the same directory.
-2. Run the DisREAP_UI function.
-3. Import your system and desired configurations.
-4. Execute the package.
-For guidance, there are two examples included:
-
-The first example is implemented on the Parrot Bebop 2 drone.
-The second example is implemented on a second-order dynamic system benchmark.
-These examples will help you understand how to run the system and interpret the results.
-
-
 # Discrete Robust to Early Termination Model Predictive Control (DisREAP)
 
 ## 🛠️ Getting Started:
-1. **Extract the zip file** to your desired location.
+1. **Extract the YALMIP zip file** to your desired location.
 2. **Run the `DisREAP_UI` function** in MATLAB.
 
 ## 🚀 Usage:
@@ -40,4 +23,4 @@ For guidance, the package includes two examples:
    - Follow the instructions in the example scripts to see the results and understand how to set up and execute your own system.
 
 ## 🤝 Support:
-For any issues or questions, please refer to the [issues page](https://github.com/your-username/your-repository/issues) on GitHub.
+For any issues or questions, please refer to the [issues page](https://github.com/mhsnar/DiscreteREAP/issues) on GitHub.
