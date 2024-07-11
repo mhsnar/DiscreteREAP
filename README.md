@@ -4,7 +4,7 @@ Discrete-Time Implementation of Robust to Early Termination Model Predictive Con
 # Implementation
 To implement the Discrete Robust to Early Termination Model Predictive Control (DisREAP), follow these steps:
 
-Extract the contents of the provided zip file.
+Extract the contents of the YALMIP zip file in the same directory.
 Run the DisREAP_UI function.
 Import your system and desired configurations.
 Execute the package.
