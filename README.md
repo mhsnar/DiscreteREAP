@@ -27,7 +27,7 @@ For any issues or questions, please refer to the [issues page](https://github.co
 
 ## Citing DisREAP:
 
-If you use the ERG Toolbox, please use the following BibTeX entry:
+If you use the DisREAP Toolbox, please use the following BibTeX entry:
 ```bibtex
 
 @INPROCEEDINGS{Amiri:DiscreteREAP,
