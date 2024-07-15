@@ -22,19 +22,17 @@ For guidance, the package includes two examples:
 2. **Run the example scripts**:
    - Follow the instructions in the example scripts to see the results and understand how to set up and execute your own system.
 
-## ▶ Citing ERGT:
+## Citing ERGT:
 
 If you use the ERG Toolbox, please use the following BibTeX entry:
 ```bibtex
-@INPROCEEDINGS{Coto1809:Explicit,
-AUTHOR="Andr{\'e}s {Cotorruelo Jim{\'e}nez} and Daniel Limon and Marco Nicotra and Emanuele Garone",
-TITLE="Explicit Reference Governor Toolbox {(ERGT)}",
-BOOKTITLE="2018 IEEE 4th International Forum on Research and Technology for Society and Industry (RTSI) (RTSI 2018)",
-ADDRESS="Palermo, Italy",
-DAYS=9,
-MONTH=sep,
-YEAR=2018,
-ABSTRACT="This paper presents the first release of the Explicit Reference Governor Toolbox (ERGT). The ERGT aims at providing a user-friendly interface for the design of an ERG scheme. The ERGT includes several built-in functions for the design phase, as well as some Simulink blocks to help with the simulation. In this current stage, this toolbox is aimed towards the design of ERG control systems for linear systems subject to the union and intersection of linear constraints. The paper presents a simple example on an aerial robotic application."
+@INPROCEEDINGS{Amiri:DiscreteREAP,
+AUTHOR="Andr{\'e}s {Mohsen Amiri and Mehdi Hosseinzadeh",
+TITLE="Discrete-Time Implementation of Robust-to-Early Termination Model Predictive Control",
+BOOKTITLE="..... ",
+ADDRESS="........",
+
+ABSTRACT="........."
 }
 
 ## 🤝 Support:
