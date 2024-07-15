@@ -25,37 +25,10 @@ For guidance, the package includes two examples:
 ## 🤝 Support:
 For any issues or questions, please refer to the [issues page](https://github.com/mhsnar/DiscreteREAP/issues) on GitHub.
 
-## Citing ERGT:
-
+## Citing DisREAP:
 
 If you use the ERG Toolbox, please use the following BibTeX entry:
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERGT Citation</title>
-    <style>
-        .code-container {
-            position: relative;
-        }
-        .copy-button {
-            position: absolute;
-            top: 0;
-            right: 0;
-            padding: 5px;
-            cursor: pointer;
-            background: #eee;
-            border: 1px solid #ccc;
-        }
-    </style>
-</head>
-<body>
-    <h1>Citing ERGT</h1>
-    <p>If you use the ERG Toolbox, please use the following BibTeX entry:</p>
-    <div class="code-container">
-        <button class="copy-button" onclick="copyToClipboard()">Copy</button>
-        <pre><code id="bibtex">
+```bibtex
 
 @INPROCEEDINGS{Amiri:DiscreteREAP,
 AUTHOR="Andr{\'e}s {Mohsen Amiri and Mehdi Hosseinzadeh",
