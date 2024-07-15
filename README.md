@@ -34,6 +34,6 @@ ADDRESS="........",
 
 ABSTRACT="........."
 }
-
+```bibtex
 ## 🤝 Support:
 For any issues or questions, please refer to the [issues page](https://github.com/mhsnar/DiscreteREAP/issues) on GitHub.
