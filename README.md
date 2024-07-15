@@ -22,6 +22,9 @@ For guidance, the package includes two examples:
 2. **Run the example scripts**:
    - Follow the instructions in the example scripts to see the results and understand how to set up and execute your own system.
 
+## 🤝 Support:
+For any issues or questions, please refer to the [issues page](https://github.com/mhsnar/DiscreteREAP/issues) on GitHub.
+
 ## Citing ERGT:
 
 
@@ -60,23 +63,9 @@ TITLE="Discrete-Time Implementation of Robust-to-Early Termination Model Predict
 BOOKTITLE="..... ",
 ADDRESS="........",
 
-ABSTRACT="........."
-}
-
-        </code></pre>
-    </div>
-    <script>
-        function copyToClipboard() {
-            const code = document.getElementById('bibtex').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('Copied to clipboard!');
-            });
-        }
-    </script>
-</body>
-</html>
+ABSTRACT="........."}
 
 
 
-## 🤝 Support:
-For any issues or questions, please refer to the [issues page](https://github.com/mhsnar/DiscreteREAP/issues) on GitHub.
+
+
