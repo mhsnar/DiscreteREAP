@@ -1,14 +1,52 @@
 % close all
 figure(1)
-for kk=1:NoS-NoI
-hold on
-t=linspace(0,n*DeltaT,length(x(kk,:)));
-plot(t,x(kk,:) ,Color=[.999/kk kk/10 1-kk/10],LineStyle="-",LineWidth=3)
-bound=.5;
-box on
-upperlimit=bound*ones(1,length(x(kk,:)));
-e=.3*bound;
-legend 
+
+hold on;
+colors = lines(NoS-NoI);  % Generate a set of distinct colors for each state
+    
+for kk = 1:NoS-NoI
+    t = linspace(0, n * DeltaT, length(x(kk, :)));
+    plot(t, x(kk, :), 'Color', colors(kk, :), 'LineWidth', 3);
+end
+
+legend_labels = arrayfun(@(kk) sprintf('x_%d', kk), 1:NoS-NoI, 'UniformOutput', false);
+legend(legend_labels);
+
+
+ylabel('Value','Interpreter', 'latex');
+
+box on;
+hold off;
+
+
+
+xlabel('Time [s]','Interpreter', 'latex');
+title(' States','Interpreter', 'latex')
+set(gcf, 'Color', 'w');
+set(gca, 'FontSize', 20);  
+grid on;
+set(gca, 'TickLabelInterpreter', 'latex');
+%% Figure
+figure(2)
+hold on;
+colors = lines(NoI);  % Generate a set of distinct colors for each state
+for kk=1:NoI
+ 
+  t = linspace(0, n * DeltaT, length(u_app(kk, :)));
+    plot(t, u_app(kk, :), 'Color', colors(kk, :), 'LineWidth', 3);
+end
+
+legend_labels = arrayfun(@(kk) sprintf('u_%d', kk), 1:NoS-NoI, 'UniformOutput', false);
+legend(legend_labels);
+
+
+ylabel('Value','Interpreter', 'latex');
+
+box on;
+hold off;
+
+
+
 xlabel('Time [s]','Interpreter', 'latex');
 title(' States','Interpreter', 'latex')
 set(gcf, 'Color', 'w');
@@ -16,19 +54,9 @@ set(gca, 'FontSize', 20);
 grid on;
 set(gca, 'TickLabelInterpreter', 'latex');
 
-end
 
 
-%% Figure
-figure(2)
-for kk=1:NoI
-bound=10;
-hold on
-upperlimit=bound*ones(1,length(x(1,:)));
 
-legend
-plot(linspace(0,n*DeltaT,length(u_app(kk,:))),u_app(kk,:) ,Color=[1-kk/10 .999/kk kk/10],LineStyle="-",LineWidth=3)
-hold off
 xlabel('Time [s]','Interpreter', 'latex');
 title('Control Inputs ','Interpreter','latex')
 set(gcf, 'Color', 'w');
@@ -36,4 +64,4 @@ set(gca, 'FontSize', 20);
 grid on;
 box on
 set(gca, 'TickLabelInterpreter', 'latex');
-end
+
