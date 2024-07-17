@@ -163,7 +163,7 @@ function [x, u_app] = runMPC(A, B, C, D,Xconstraint,Uconstraint, x0,r,Qx, Qu, Qv
 
     % Compute MPC
     [x, u_app] = MPCFunctions.computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, AT, n,C);
-    plott_EXP_Velocity
+    plott_EXP
 end
 
 
