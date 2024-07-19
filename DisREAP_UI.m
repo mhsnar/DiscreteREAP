@@ -5,33 +5,7 @@ close all
     % Create the figure for the UI
     fig = uifigure('Name', 'Discrete REAP Input Interface', 'Position', [100 100 800 600]);
 
-    % Define default matrices
-    defaultMatrixA = [0 0.5;1 .5];
-    defaultMatrixB = [0 0.5;1 .5];
-    defaultMatrixC = [1 0];
-    defaultMatrixD =[0 0];
-    defaultMatrixQx = [5 0 ; 0 100];
-    defaultMatrixQu = [35 0;0 1];
-    defaultMatrixQv =    [100];
-
-
-  defaultMatrixUconstraint=[10;10];
-defaultMatrixX0Str=[  0;0];
-defaultMatrixrStr=[5;0];
-defaultMatrixXconstraint=[10;10];
-
-    % Convert matrices to string representations
-    defaultMatrixAStr = mat2str(defaultMatrixA);
-    defaultMatrixBStr = mat2str(defaultMatrixB);
-    defaultMatrixCStr = mat2str(defaultMatrixC);
-    defaultMatrixDStr = mat2str(defaultMatrixD);
-    defaultMatrixQxStr = mat2str(defaultMatrixQx);
-    defaultMatrixQuStr = mat2str(defaultMatrixQu);
-    defaultMatrixQvStr = mat2str(defaultMatrixQv);
-    defaultMatrixUconstraintStr=mat2str(defaultMatrixUconstraint);
-    defaultMatrixXconstraintStr=mat2str(defaultMatrixXconstraint);
- defaultMatrixX0Str=mat2str(defaultMatrixX0Str);
-     defaultMatrixrStr=mat2str(defaultMatrixrStr);
+  
 
     % First column
     uilabel(fig, 'Text', 'Matrix A:', 'Position', [20 550 100 22]);
@@ -59,14 +33,15 @@ defaultMatrixXconstraint=[10;10];
 
     uilabel(fig, 'Text', 'Matrix Qu:', 'Position', [420 470 100 22]);
     QuInput = uitextarea(fig, 'Position', [530 420 250 70]);
+    % 
+    % uilabel(fig, 'Text', 'Matrix Qv:', 'Position', [420 390 100 22]);
+    % QvInput = uitextarea(fig, 'Position', [530 340 250 70]);
+        uilabel(fig, 'Text', 'Initial Condistions:', 'Position',  [420 390 100 22]);
+    x0 = uitextarea(fig, 'Position', [530 340 250 70]);
 
-    uilabel(fig, 'Text', 'Matrix Qv:', 'Position', [420 390 100 22]);
-    QvInput = uitextarea(fig, 'Position', [530 340 250 70]);
+        uilabel(fig, 'Text', 'Desired:', 'Position', [420 310 100 22]);
+    r = uitextarea(fig, 'Position', [530 310 250 22]);
 
-
-
-    uilabel(fig, 'Text', 'DeltaT:', 'Position', [420 310 100 22]);
-    DeltaTInput = uieditfield(fig, 'numeric', 'Position', [530 310 250 22]);
 
     uilabel(fig, 'Text', 'Prediction Horizon:', 'Position', [420 270 150 22]);
     PredictionHorizonInput = uieditfield(fig, 'numeric', 'Position', [530 270 250 22]);
@@ -74,25 +49,26 @@ defaultMatrixXconstraint=[10;10];
     uilabel(fig, 'Text', 'Omegastar:', 'Position', [420 238.5 100 22]);
     OmegastarInput = uieditfield(fig, 'numeric', 'Position', [530 238.5 250 22]);
 
-    uilabel(fig, 'Text', 'Available Time:', 'Position', [420 210 100 22]);
-    ATInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22]);
+    % uilabel(fig, 'Text', 'Available Time:', 'Position', [420 210 100 22]);
+    % ATInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22], 'Value', 0.2);
 
-    uilabel(fig, 'Text', '#iter:', 'Position', [420 180.5 100 22]);
-    nSimInput = uieditfield(fig, 'numeric', 'Position', [530 180.5 250 22]);
+    uilabel(fig, 'Text', '#iter:', 'Position', [420 210 100 22]);
+    nSimInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22]);
 
-        uilabel(fig, 'Text', 'Initial Condistion:', 'Position', [420 150 100 22]);
-    x0 = uitextarea(fig, 'Position', [530 150 250 22]);
+    %     uilabel(fig, 'Text', 'Initial Condistion:', 'Position', [420 180.5 100 22]);
+    % x0 = uitextarea(fig, 'Position', [530 180.5 250 22]);
 
-    uilabel(fig, 'Text', 'Desired:', 'Position', [420 120 100 22]);
-    r = uitextarea(fig, 'Position', [530 120 250 22]);
+
+    uilabel(fig, 'Text', 'Sampling Time:', 'Position', [420 180.5 100 22]);
+    DeltaTInput = uieditfield(fig, 'numeric', 'Position', [530 180.5 250 22]);
 
     % Add a button to trigger the MPC calculation
     btn = uibutton(fig, 'Text', 'Run REAP', 'Position', [350 30 100 20], ...
-        'ButtonPushedFcn', @(btn, event) runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstraints, x0,r,QxInput, QuInput, QvInput, DeltaTInput, PredictionHorizonInput, OmegastarInput, ATInput, nSimInput));
+        'ButtonPushedFcn', @(btn, event) runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstraints, x0,r,QxInput, QuInput, DeltaTInput, PredictionHorizonInput, OmegastarInput, nSimInput));
    
 end
 
-function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstraints,x0,r, QxInput, QuInput, QvInput, DeltaTInput, PredictionHorizonInput, OmegastarInput, ATInput, nSimInput)
+function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstraints,x0,r, QxInput, QuInput, DeltaTInput, PredictionHorizonInput, OmegastarInput, nSimInput)
     % Parse the user inputs
    
 
@@ -106,15 +82,16 @@ function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstra
     r = str2num(char(r.Value)); %#ok<ST2NM>
     Qx = str2num(char(QxInput.Value)); %#ok<ST2NM>
     Qu = str2num(char(QuInput.Value)); %#ok<ST2NM>
-    Qv = str2num(char(QvInput.Value)); %#ok<ST2NM>
+    % Qv = str2num(char(QvInput.Value)); %#ok<ST2NM>
+    Qv = 100;
     DeltaT = DeltaTInput.Value;
     Prediction_Horizon = PredictionHorizonInput.Value;
     Omegastar = OmegastarInput.Value;
-    AT = ATInput.Value;
+    % AT = ATInput.Value;
     nSim = nSimInput.Value;
 
     % Run the MPC (this is a placeholder for your actual MPC function)
-    [x, u_app] = runMPC(A, B, C, D,XConstraints,UConstraints,x0,r, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, AT, nSim);
+    [x, u_app] = runMPC(A, B, C, D,XConstraints,UConstraints,x0,r, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, nSim);
     
     % Display results in a new figure
     resultFig = uifigure('Name', 'MPC Results', 'Position', [600 100 400 600]);
@@ -126,7 +103,7 @@ function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstra
 end
 
 
-function [x, u_app] = runMPC(A, B, C, D,Xconstraint,Uconstraint, x0,r,Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, AT, n)
+function [x, u_app] = runMPC(A, B, C, D,Xconstraint,Uconstraint, x0,r,Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n)
 
     % Main function to run the MPC
 
@@ -137,10 +114,7 @@ function [x, u_app] = runMPC(A, B, C, D,Xconstraint,Uconstraint, x0,r,Qx, Qu, Qv
     [Ad, Bd, Cd,Dd, NoS, NoI, NoO] = MPCFunctions.initialize(A, B, C, D, DeltaT);
 
     % Compute MPC
-    [x, u_app] = MPCFunctions.computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, AT, n);
+    [x, u_app] = MPCFunctions.computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n);
     plott_EXP
 end
-
-
-
 

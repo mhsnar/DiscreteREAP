@@ -1,4 +1,4 @@
-function [x, u_app] = computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizion, Omegastar,AT, n,C)
+function [x, u_app] = computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizion, Omegastar, n,C)
 % Compute MPC control action
 % Implement the MPC logic here based on the provided code
 
@@ -235,7 +235,7 @@ for inc=1:n
 
 
 
-    % AT=DeltaT-0.05;   %Available Time for Primal_dual_gradient_flow
+    AT=DeltaT-0.05;   %Available Time for Primal_dual_gradient_flow
 
     if inc==1
         u_app=zeros(NoI,1);
