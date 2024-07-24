@@ -107,11 +107,11 @@ defaultMatrixXconstraint=[10 10 2.57 10 10 10]';
         % uilabel(fig, 'Text', 'Available Time:', 'Position', [420 210 100 22]);
     % ATInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22], 'Value', 0.2);
 
-    uilabel(fig, 'Text', '#iter:', 'Position', [420 210 100 22]);
+    uilabel(fig, 'Text', '# Time Instants:', 'Position', [420 210 100 22]);
     nSimInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22], 'Value', 100);
 
 
-    uilabel(fig, 'Text', 'Sampling Time:', 'Position',[420 180.5 100 22]);
+    uilabel(fig, 'Text', 'Sampling Period:', 'Position',[420 180.5 100 22]);
     DeltaTInput = uieditfield(fig, 'numeric', 'Position', [530 180.5 250 22], 'Value', 0.2);
 
 

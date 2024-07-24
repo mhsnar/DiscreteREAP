@@ -52,14 +52,14 @@ close all
     % uilabel(fig, 'Text', 'Available Time:', 'Position', [420 210 100 22]);
     % ATInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22], 'Value', 0.2);
 
-    uilabel(fig, 'Text', '#iter:', 'Position', [420 210 100 22]);
+    uilabel(fig, 'Text', '# Time Instants:', 'Position', [420 210 100 22]);
     nSimInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22]);
 
     %     uilabel(fig, 'Text', 'Initial Condistion:', 'Position', [420 180.5 100 22]);
     % x0 = uitextarea(fig, 'Position', [530 180.5 250 22]);
 
 
-    uilabel(fig, 'Text', 'Sampling Time:', 'Position', [420 180.5 100 22]);
+    uilabel(fig, 'Text', 'Sampling Period:', 'Position', [420 180.5 100 22]);
     DeltaTInput = uieditfield(fig, 'numeric', 'Position', [530 180.5 250 22]);
 
     % Add a button to trigger the MPC calculation
