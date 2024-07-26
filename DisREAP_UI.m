@@ -47,7 +47,7 @@ close all
     PredictionHorizonInput = uieditfield(fig, 'numeric', 'Position', [530 270 250 22]);
 
     uilabel(fig, 'Text', 'Omegastar:', 'Position', [420 238.5 100 22]);
-    OmegastarInput = uieditfield(fig, 'numeric', 'Position', [530 238.5 250 22]);
+    OmegastarInput = uieditfield(fig, 'numeric', 'Position', [530 238.5 250 22], 'Value', 20);
 
     % uilabel(fig, 'Text', 'Available Time:', 'Position', [420 210 100 22]);
     % ATInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22], 'Value', 0.2);
