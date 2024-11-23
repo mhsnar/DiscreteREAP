@@ -15,10 +15,12 @@ close all
     defaultMatrixQv =    [100];
 
 
-  defaultMatrixUconstraint=[10;10];
+  defaultMatrixUconstraintU=[10;10];
+    defaultMatrixUconstraintL=[-10;-10];
 defaultMatrixX0Str=[  0;0];
 defaultMatrixrStr=[4.85;0];
-defaultMatrixXconstraint=[5;5];
+defaultMatrixXconstraintU=[5;5];
+defaultMatrixXconstraintL=[-5;-5];
 
     % Convert matrices to string representations
     defaultMatrixAStr = mat2str(defaultMatrixA);
@@ -28,10 +30,13 @@ defaultMatrixXconstraint=[5;5];
     defaultMatrixQxStr = mat2str(defaultMatrixQx);
     defaultMatrixQuStr = mat2str(defaultMatrixQu);
     defaultMatrixQvStr = mat2str(defaultMatrixQv);
-    defaultMatrixUconstraintStr=mat2str(defaultMatrixUconstraint);
-    defaultMatrixXconstraintStr=mat2str(defaultMatrixXconstraint);
- defaultMatrixX0Str=mat2str(defaultMatrixX0Str);
+    defaultMatrixUconstraintUStr=mat2str(defaultMatrixUconstraintU);
+    defaultMatrixUconstraintLStr=mat2str(defaultMatrixUconstraintL);
+    defaultMatrixXconstraintUStr=mat2str(defaultMatrixXconstraintU);
+    defaultMatrixXconstraintLStr=mat2str(defaultMatrixXconstraintL);
+    defaultMatrixX0Str=mat2str(defaultMatrixX0Str);
      defaultMatrixrStr=mat2str(defaultMatrixrStr);
+
 
     % First column
     uilabel(fig, 'Text', 'Matrix A:', 'Position', [20 550 100 22]);
@@ -47,11 +52,19 @@ defaultMatrixXconstraint=[5;5];
     uilabel(fig, 'Text', 'Matrix D:', 'Position', [20 310 100 22]);
     DInput = uitextarea(fig, 'Position', [130 260 250 70], 'Value', defaultMatrixDStr);
 
-    uilabel(fig, 'Text', 'Constraints on X:', 'Position', [20 220 100 22]);
-    XConstraints = uitextarea(fig, 'Position', [130 200 250 40],'Value', defaultMatrixXconstraintStr);
 
-    uilabel(fig, 'Text', 'Constraints on U:', 'Position', [20 160 100 22]);
-    UConstraints = uitextarea(fig, 'Position', [130 140 250 40],'Value', defaultMatrixUconstraintStr);
+    uilabel(fig, 'Text', 'X constraint U.B.:', 'Position', [20 230 100 22]);
+    XConstraintsU = uitextarea(fig, 'Position', [130 230 250 20],'Value', defaultMatrixXconstraintUStr);
+
+     uilabel(fig, 'Text', 'X constraint L.B.:', 'Position', [20 200 100 22]);
+    XConstraintsL = uitextarea(fig, 'Position', [130 200 250 20],'Value', defaultMatrixXconstraintLStr);
+
+    uilabel(fig, 'Text', 'U Constraints U.B:', 'Position', [20 170 100 22]);
+    UConstraintsU = uitextarea(fig, 'Position', [130 170 250 20],'Value', defaultMatrixUconstraintUStr);
+
+    uilabel(fig, 'Text', 'U constraint L.B.:', 'Position', [20 140 100 22]);
+    UConstraintsL = uitextarea(fig, 'Position', [130 140 250 20],'Value', defaultMatrixUconstraintLStr);
+
 
     % Second column
     uilabel(fig, 'Text', 'Matrix Qx:', 'Position', [420 550 100 22]);
@@ -72,11 +85,29 @@ defaultMatrixXconstraint=[5;5];
     uilabel(fig, 'Text', 'Prediction Horizon:', 'Position', [420 270 150 22]);
     PredictionHorizonInput = uieditfield(fig, 'numeric', 'Position', [530 270 250 22], 'Value', 10);
 
-    uilabel(fig, 'Text', 'Omegastar:', 'Position', [420 238.5 100 22]);
-    OmegastarInput = uieditfield(fig, 'numeric', 'Position', [530 238.5 250 22], 'Value', 20);
+    % Omegastar input field
+    uilabel(fig, 'Text', 'Omegastar:', 'Position', [420 120 100 22]);
+    OmegastarInput = uieditfield(fig, 'numeric', 'Position', [530 120 250 22], 'Value', 20);
+
+    % Dropdown to select mode (Automatic/Manual)
+    uilabel(fig, 'Text', 'Algorithm Mode:', 'Position', [420 150 100 22]);
+    ModeDropdown = uidropdown(fig, ...
+        'Items', {'Automatic', 'Manual'}, ...
+        'Position', [530 150 250 22], ...
+        'ValueChangedFcn', @(dd, event) toggleOmegastarInput());
+
+    % Nested function to toggle the OmegastarInput field
+    function toggleOmegastarInput()
+        if strcmp(ModeDropdown.Value, 'Automatic')
+            OmegastarInput.Enable = 'off'; % Disable manual input
+        else
+            OmegastarInput.Enable = 'on'; % Enable manual input
+        end
+    end
+
+    % Initialize Omegastar input state based on default dropdown value
+    toggleOmegastarInput();
     % 
-
-
         % uilabel(fig, 'Text', 'Available Time:', 'Position', [420 210 100 22]);
     % ATInput = uieditfield(fig, 'numeric', 'Position', [530 210 250 22], 'Value', 0.2);
 
@@ -91,11 +122,11 @@ defaultMatrixXconstraint=[5;5];
 
     % Add a button to trigger the MPC calculation
     btn = uibutton(fig, 'Text', 'Run REAP', 'Position', [350 30 100 20], ...
-        'ButtonPushedFcn', @(btn, event) runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstraints, x0,r,QxInput, QuInput, DeltaTInput, PredictionHorizonInput, OmegastarInput, nSimInput));
-   
+        'ButtonPushedFcn', @(btn, event) runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstraintsL,UConstraintsU,UConstraintsL, x0,r,QxInput, QuInput, DeltaTInput, PredictionHorizonInput,ModeDropdown, OmegastarInput, nSimInput));
+                                                                                           
 end
 
-function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstraints,x0,r, QxInput, QuInput, DeltaTInput, PredictionHorizonInput, OmegastarInput, nSimInput)
+function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstraintsL,UConstraintsU,UConstraintsL,x0,r, QxInput, QuInput, DeltaTInput, PredictionHorizonInput,ModeDropdown, OmegastarInput, nSimInput)
     % Parse the user inputs
    
 
@@ -103,8 +134,8 @@ function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstra
     B = str2num(char(BInput.Value)); %#ok<ST2NM>
     C = str2num(char(CInput.Value)); %#ok<ST2NM>
     D = str2num(char(DInput.Value)); %#ok<ST2NM>
-    XConstraints = str2num(char(XConstraints.Value)); %#ok<ST2NM>
-    UConstraints = str2num(char(UConstraints.Value)); %#ok<ST2NM>
+    XConstraints = [str2num(char(XConstraintsL.Value)), str2num(char(XConstraintsU.Value))]; %#ok<ST2NM>
+    UConstraints = [str2num(char(UConstraintsL.Value)),str2num(char(UConstraintsU.Value))]; %#ok<ST2NM>
         x0 = str2num(char(x0.Value)); %#ok<ST2NM>
     r = str2num(char(r.Value)); %#ok<ST2NM>
     Qx = str2num(char(QxInput.Value)); %#ok<ST2NM>
@@ -116,8 +147,25 @@ function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraints,UConstra
     Omegastar = OmegastarInput.Value;
     % AT = ATInput.Value;
     nSim = nSimInput.Value;
+   
+    
 
-    % Run the MPC (this is a placeholder for your actual MPC function)
+    if strcmp(ModeDropdown.Value, 'Automatic')
+        
+        G = ss(A, B, C, D);
+        Gd = c2d(G, DeltaT);
+        Ad = Gd.A;
+        Bd = Gd.B;
+        Cd = Gd.C;
+        Dd = Gd.D;
+        NoS = size(Ad, 1);
+        NoI = size(Bd, 2);
+        Omegastar =  MPCFunctions.computeOmegastar(Ad, Bd,Cd,Dd,XConstraints,UConstraints,r, NoS,NoI, Qx, Qu); % Replace with actual algorithm
+    else
+        Omegastar = OmegastarInput.Value;
+    end
+
+    % Run the MPC 
     [x, u_app] = runMPC(A, B, C, D,XConstraints,UConstraints,x0,r, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, nSim);
     
     % Display results in a new figure

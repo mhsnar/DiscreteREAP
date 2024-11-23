@@ -1,4 +1,4 @@
-function [x, u_app] = computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizion, Omegastar, n,C)
+function [x, u_app] = computeMPC(Ad, Bd, Cd,Dd,Xconstraints,Uconstraints,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizion, Omegastar, n,C)
 % Compute MPC control action
 % Implement the MPC logic here based on the provided code
 
@@ -10,11 +10,14 @@ u_des=zeros(NoI,1);
 x(:, 1) = [x0;zeros(NoI,1)];
 
 % Discretized system matrices for augmented system
+Xconstraint_down=Xconstraints(:,1);
+Xconstraint=Xconstraints(:,end);
 
-
+Uconstraint_down=Uconstraints(:,1);
+Uconstraint=Uconstraints(:,end);
 % State and control constraints
 Xconstraint = [Xconstraint;1000* ones(NoI,1)];
-
+Xconstraint_down=[Xconstraint_down;-1000* ones(NoI,1)];
 
 % Extended matrices for prediction horizon
 QxBar = blkdiag(kron(eye(Prediction_Horizion), Qx));
@@ -72,12 +75,17 @@ beta=100;
 
 x_up=[];
 u_up=[];
+u_down=[];
+x_down=[];
 for i=1:Prediction_Horizion
     u_up=[u_up;Uconstraint];
+    u_down=[u_down;Uconstraint_down];
+
     x_up=[x_up;Xconstraint];
+    x_down=[x_down;Xconstraint_down];
 end
-u_down=-u_up;
-x_down=-x_up;
+% u_down=-u_up;
+% x_down=-x_up;
 
 % Create QuBar using blkdiag
 QuBar = blkdiag(kron(eye(Prediction_Horizion), Qu));
@@ -202,26 +210,26 @@ for inc=1:n
                 Sig=Sig+(Ad+Bd*K)^(j-1)*(Bd*M2*theta-Bd*K*M1*theta);
             end
             CbarTx1=[CbarTx1;Sig-Xconstraint+1/beta];
-            CbarTx2=[CbarTx2;-Sig-Xconstraint+1/beta];
+            CbarTx2=[CbarTx2;-Sig+Xconstraint_down+1/beta];
         end
         TXConstraints1=(AbarTx*x0+BbarTx*hat_u+CbarTx1);
         TXConstraints2=-(AbarTx*x0+BbarTx*hat_u)+CbarTx2;
 
         CbarTu1=M2*theta-K*M1*theta-Uconstraint+1/beta;
-        CbarTu2=-(M2*theta-K*M1*theta)-Uconstraint+1/beta;
+        CbarTu2=-(M2*theta-K*M1*theta)+Uconstraint_down+1/beta;
         for i=1:Omegastar-1
             Sig=zeros(size(Bd,2),1);
             for j=1:i
                 Sig=Sig+K*(Ad+Bd*K)^(j-1)*(Bd*M2*theta-Bd*K*M1*theta);
             end
             CbarTu1=[CbarTu1;Sig+M2*theta-K*M1*theta-Uconstraint+1/beta];
-            CbarTu2=[CbarTu2;-(Sig+M2*theta-K*M1*theta)-Uconstraint+1/beta];
+            CbarTu2=[CbarTu2;-(Sig+M2*theta-K*M1*theta)+Uconstraint_down+1/beta];
         end
         TUConstraints1=AbarTu*x0+BbarTu*hat_u+CbarTu1;
         TUConstraints2=-(AbarTu*x0+BbarTu*hat_u)+CbarTu2;
 
         TConstraints=[TXConstraints1;TXConstraints2;TUConstraints1;TUConstraints2]<=0;
-        TConstraints = [TConstraints;M2*theta<=0.98*Uconstraint-1/beta;M2*theta>=-0.98*Uconstraint+1/beta;M1*theta<=0.98*Xconstraint-1/beta;M1*theta>=-0.98*Xconstraint+1/beta];
+        TConstraints = [TConstraints;M2*theta<=0.98*Uconstraint-1/beta;M2*theta>=+0.98*Uconstraint_down+1/beta;M1*theta<=0.98*Xconstraint-1/beta;M1*theta>=0.98*Xconstraint_down+1/beta];
 
         Constraint=[x_pr<=x_up-1/beta;x_pr>=x_down+1/beta;hat_u<=u_up-1/beta;hat_u>=u_down+1/beta];
 
@@ -267,9 +275,9 @@ for inc=1:n
         ErrorTX = errTX' * Qn * errTX;
 
         TXConstraints1_eps= M1*theta-0.98*Xconstraint+1/beta;
-        TXConstraints2_eps= -M1*theta-0.98*Xconstraint+1/beta;
+        TXConstraints2_eps= -M1*theta+0.98*Xconstraint_down+1/beta;
         TUConstraints1_eps=M2*theta-0.98*Uconstraint+1/beta;
-        TUConstraints2_eps=- M2*theta-0.98*Uconstraint+1/beta;
+        TUConstraints2_eps=- M2*theta+0.98*Uconstraint_down+1/beta;
 
          CbarTx1=[];
             CbarTx2=[];
@@ -279,7 +287,7 @@ for inc=1:n
                     Sig=Sig+(Ad+Bd*K)^(j-1)*(Bd*M2*theta-Bd*K*M1*theta);
                 end
                 CbarTx1=[CbarTx1;Sig-Xconstraint+1/beta];
-                CbarTx2=[CbarTx2;-Sig-Xconstraint+1/beta];
+                CbarTx2=[CbarTx2;-Sig+Xconstraint_down+1/beta];
             end
             TXConstraints1=AbarTx*x0+BbarTx*hat_u+CbarTx1;
             TXConstraints2=-(AbarTx*x0+BbarTx*hat_u)+CbarTx2;
@@ -287,14 +295,14 @@ for inc=1:n
             % AbarTx*x0+BbarTx*hat_u+CbarTx1+Xconstraint-1/beta
             % 
             CbarTu1=M2*theta-K*M1*theta-Uconstraint+1/beta;
-            CbarTu2=-(M2*theta-K*M1*theta)-Uconstraint+1/beta;
+            CbarTu2=-(M2*theta-K*M1*theta)+Uconstraint_down+1/beta;
             for i=1:Omegastar-1
                 Sig=zeros(size(Bd,2),1);
                 for j=1:i
                     Sig=Sig+K*(Ad+Bd*K)^(j-1)*(Bd*M2*theta-Bd*K*M1*theta);
                 end
                 CbarTu1=[CbarTu1;Sig+M2*theta-K*M1*theta-Uconstraint+1/beta];
-                CbarTu2=[CbarTu2;-(Sig+M2*theta-K*M1*theta)-Uconstraint+1/beta];
+                CbarTu2=[CbarTu2;-(Sig+M2*theta-K*M1*theta)+Uconstraint_down+1/beta];
             end
             TUConstraints1=AbarTu*x0+BbarTu*hat_u+CbarTu1;
             TUConstraints2=-(AbarTu*x0+BbarTu*hat_u)+CbarTu2;
