@@ -3,7 +3,7 @@ function Omegastar = computeOmegastar(Ad, Bd,Cd,Dd,Xconstraints,Uconstraints,r, 
 
 
 
-disp('Automatic Calculation of OmegaStar started!');
+disp('Automatic Calculation of OmegaStar has started!...');
 beta=100;
 [~,K,~,~] = idare(Ad,Bd,Qx,Qu,[],[]);
 K=-K;
@@ -37,12 +37,13 @@ for Omegastar=0:100
     clear TConstraints_cost TConstraints x
 
     yalmip('clear')
-    ssss=M1(1:NoS,:);
-    if size(ssss,1)==size(ssss,2)
-        theta=inv(ssss)*r;
-    else
-        theta=pinv(ssss)*r;
-    end
+    % ssss=M1(1:NoS,:);
+    % if size(ssss,1)==size(ssss,2)
+    %     theta=inv(ssss)*r;
+    % else
+    %     theta=pinv(ssss)*r;
+    % end
+    theta=pinv(N)*r;
     % theta = sdpvar(3,1,'full');
     x=sdpvar(NoS,1,'full');
 
@@ -140,7 +141,7 @@ for Omegastar=0:100
     for i=1:length(TConstraints_cost)
         cons=TConstraints_cost(i);
         sigma=-cons;
-        options = sdpsettings('solver', 'fmincon');
+        options = sdpsettings('solver', 'fmincon','showprogress',0,'verbose',0);
         optimize(TConstraints,sigma,options);
         J(i)=double(-sigma);
 
