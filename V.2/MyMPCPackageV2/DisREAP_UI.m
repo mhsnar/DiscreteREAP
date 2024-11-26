@@ -80,36 +80,43 @@ function DisREAP_UI()
     DeltaTInput = uieditfield(fig, 'numeric', 'Position', [530 180.5 250 22]);
 
 
+    % Add checkboxes for plot activation
+uilabel(fig, 'Text', 'Select Plots:', 'Position', [20 100 100 22]);
+checkbox1 = uicheckbox(fig, 'Text', 'States', 'Position', [130 100 100 22]);
+checkbox2 = uicheckbox(fig, 'Text', 'Control Inputs', 'Position', [200 100 100 22]);
+checkbox3 = uicheckbox(fig, 'Text', 'Output', 'Position', [130 70 100 22]);
+checkbox4 = uicheckbox(fig, 'Text', 'Sigma', 'Position', [200 70 100 22]);
+
     % Add a button to trigger the MPC calculation
     btn = uibutton(fig, 'Text', 'Run REAP', 'Position', [350 30 100 20], ...
-        'ButtonPushedFcn', @(btn, event) runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstraintsL,UConstraintsU,UConstraintsL, x0,r,QxInput, QuInput, DeltaTInput, PredictionHorizonInput,ModeDropdown, OmegastarInput, nSimInput));
+        'ButtonPushedFcn', @(btn, event) runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstraintsL,UConstraintsU,UConstraintsL, x0,r,QxInput, QuInput, DeltaTInput, PredictionHorizonInput,ModeDropdown, OmegastarInput, nSimInput,checkbox1, checkbox2, checkbox3,checkbox4));
                                                                                            
 end
 
-function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstraintsL,UConstraintsU,UConstraintsL,x0,r, QxInput, QuInput, DeltaTInput, PredictionHorizonInput,ModeDropdown, OmegastarInput, nSimInput)
+function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstraintsL,UConstraintsU,UConstraintsL,x0,r, QxInput, QuInput, DeltaTInput, PredictionHorizonInput,ModeDropdown, OmegastarInput, nSimInput,checkbox1, checkbox2, checkbox3,checkbox4)
     % Parse the user inputs
    
 
-    A = str2num(char(AInput.Value)); %#ok<ST2NM>
+   A = str2num(char(AInput.Value)); %#ok<ST2NM>
     B = str2num(char(BInput.Value)); %#ok<ST2NM>
     C = str2num(char(CInput.Value)); %#ok<ST2NM>
     D = str2num(char(DInput.Value)); %#ok<ST2NM>
     XConstraints = [str2num(char(XConstraintsL.Value)), str2num(char(XConstraintsU.Value))]; %#ok<ST2NM>
     UConstraints = [str2num(char(UConstraintsL.Value)),str2num(char(UConstraintsU.Value))]; %#ok<ST2NM>
-    x0 = str2num(char(x0.Value)); %#ok<ST2NM>
+        x0 = str2num(char(x0.Value)); %#ok<ST2NM>
     r = str2num(char(r.Value)); %#ok<ST2NM>
     Qx = str2num(char(QxInput.Value)); %#ok<ST2NM>
     Qu = str2num(char(QuInput.Value)); %#ok<ST2NM>
+    % Qv = str2num(char(QvInput.Value)); %#ok<ST2NM>
     Qv=100;
     DeltaT = DeltaTInput.Value;
     Prediction_Horizon = PredictionHorizonInput.Value;
+    Omegastar = OmegastarInput.Value;
+    % AT = ATInput.Value;
     nSim = nSimInput.Value;
-
-     
+   
     
 
-    if strcmp(ModeDropdown.Value, 'Automatic')
-        
         G = ss(A, B, C, D);
         Gd = c2d(G, DeltaT);
         Ad = Gd.A;
@@ -119,14 +126,16 @@ function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstr
         NoS = size(Ad, 1);
         NoI = size(Bd, 2);
         Omegastar =  MPCFunctions.computeOmegastar(Ad, Bd,Cd,Dd,XConstraints,UConstraints,r, NoS,NoI, Qx, Qu); % Replace with actual algorithm
-    else
+         if strcmp(ModeDropdown.Value, 'Manual') && Omegastar>OmegastarInput.Value
+          disp('Warning: The chosen Omegastar is lower than the stable Omegastar and might lead to REAP becoming unstable or unsafe.');
         Omegastar = OmegastarInput.Value;
-    end
+         else
+             
+        end
+
+    % Run the MPC 
+    [x, u_app] = runMPC(A, B, C, D,XConstraints,UConstraints,x0,r, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, nSim,checkbox1, checkbox2, checkbox3,checkbox4);
     
-
-    % Run MPC
-    [x, u_app] = runMPC(A, B, C, D, XConstraints, UConstraints, x0, r, Qx, Qu,Qv, DeltaT, Prediction_Horizon, Omegastar, nSim);
-
     % Display results in a new figure
     resultFig = uifigure('Name', 'MPC Results', 'Position', [600 100 400 600]);
     uilabel(resultFig, 'Text', 'State Trajectories (x):', 'Position', [20 550 150 20]);
@@ -134,17 +143,26 @@ function runMPCButtonPushed(AInput, BInput, CInput, DInput,XConstraintsU,XConstr
 
     uilabel(resultFig, 'Text', 'Applied Control Inputs (u_app):', 'Position', [20 270 200 20]);
     uitextarea(resultFig, 'Value', mat2str(u_app), 'Position', [20 20 360 250]);
+
+    
 end
 
-function [x, u_app] = runMPC(A, B, C, D, Xconstraint, Uconstraint, x0, r, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n)
+
+function [x, u_app] = runMPC(A, B, C, D,Xconstraint,Uconstraint, x0,r,Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n,checkbox1, checkbox2, checkbox3,checkbox4)
+
     % Main function to run the MPC
 
     % Validate inputs
-    MPCFunctions.validateInputs(A, B, C, D, Qx, Qu, Qv);
-
+    MPCFunctions.validateInputs(A, B, C, D, Qx, Qu, Qv, Xconstraint(:,end), Xconstraint(:,1), Uconstraint(:,end), Uconstraint(:,1), x0, r, n, DeltaT);
     % Initialize parameters and states
-    [Ad, Bd, Cd, Dd, NoS, NoI, NoO] = MPCFunctions.initialize(A, B, C, D, DeltaT);
+    [Ad, Bd, Cd,Dd, NoS, NoI, NoO] = MPCFunctions.initialize(A, B, C, D, DeltaT);
 
     % Compute MPC
-    [x, u_app] = MPCFunctions.computeMPC(Ad, Bd, Cd, Dd, Xconstraint, Uconstraint, x0, r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n);
+    [x, u_app,Sigmas] = MPCFunctions.computeMPC(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n);
+    disp('REAP ended!');
+    disp('Plotting the graphs has started!...');
+    plotFlags = [checkbox1.Value, checkbox2.Value, checkbox3.Value,checkbox4.Value]; % Logical array for plot states
+    plott_EXP
+    disp('Plotting the graphs ended!');
 end
+
