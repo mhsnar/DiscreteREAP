@@ -90,7 +90,7 @@ Qx = [1 0; 0 1]
 
 14. **Omegastar**  
  A parameter used in the algorithm for manual optimization. Disabled in **Automatic** mode.
-
+Warning: If the chosen Omegastar is lower than the stable Omegastar (which is calculated by the algorithm) it might lead to REAP becoming unstable or unsafe.
 15. **# Time Instants**  
  Total number of time steps for the simulation.  
  **Example**: `100`
