@@ -35,8 +35,6 @@ Feedthrough matrix, directly connecting input to output.
 D = 0
 
 
----
-
 ### **Constraints**
 5. **X Constraint U.B.** (Upper Bound)  
 Upper bounds for the system state vector \(x\).  
@@ -54,7 +52,6 @@ Upper bounds for the control input vector \(u\).
 Lower bounds for the control input vector \(u\).  
 **Example**: `[-1]`
 
----
 
 ### **Cost Function Weights**
 9. **Matrix Qx**  
@@ -66,11 +63,8 @@ Qx = [1 0; 0 1]
 10. **Matrix Qu**  
  Weighting matrix for penalizing control efforts in the cost function.  
  **Example**:  
- ```
  Qu = [0.01]
- ```
 
----
 
 ### **Initial and Desired Conditions**
 11. **Initial Condition** (\(x_0\))  
@@ -81,7 +75,7 @@ Qx = [1 0; 0 1]
  Desired reference state or output.  
  **Example**: `[1; 0]`
 
----
+
 
 ### **Simulation Parameters**
 13. **Prediction Horizon**  
@@ -99,7 +93,7 @@ Warning: If the chosen Omegastar is lower than the stable Omegastar (which is ca
  Time interval between successive steps.  
  **Example**: `0.2`
 
----
+
 
 ### **Plots**
 17. **Select Plots**  
