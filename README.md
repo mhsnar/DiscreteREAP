@@ -11,19 +11,14 @@
 
 ## 📋 **Input Fields Explained**
 
-### **System Matrices**
+**System Matrices**
 1. **Matrix A**  
    Represents the state-transition matrix of the system.  
    **Example**:  
 
 ---
 
-## 📋 **Input Fields Explained**
 
-### **System Matrices**
-1. **Matrix A**  
-   Represents the state-transition matrix of the system.  
-   **Example**:  
 3. **Execute the package** to start the control process.
 
 ## 📚 Examples:
