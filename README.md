@@ -7,19 +7,28 @@
 ## 🚀 Usage:
 1. **Import your system and desired configurations**:
    - After running `DisREAP_UI`, import your system model and specify your desired configurations,  enable plots, and simulate the system to observe results.
-  
+2. **Execute the package** to start the control process.
 
+   
 ## 📋 **Input Fields Explained**
 
-**System Matrices**
+
+### **System Matrices**
 1. **Matrix A**  
    Represents the state-transition matrix of the system.  
    **Example**:  
+A = [0 1; -2 -3]
 
----
+2. **Matrix B**  
+Input matrix defining how the control inputs affect the system.  
+**Example**:
 
+B = [0; 1]
 
-3. **Execute the package** to start the control process.
+3. **Matrix C**  
+Output matrix, mapping the state to system outputs.  
+**Example**:  
+C = [1 0]
 
 ## 📚 Examples:
 For guidance, the package includes two examples:
