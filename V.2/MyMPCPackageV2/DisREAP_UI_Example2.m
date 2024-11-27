@@ -89,7 +89,7 @@ PredictionHorizonInput = uieditfield(fig, 'numeric', 'Position', [530 310 250 22
 
 
 % Dropdown to select desired input type
-uilabel(fig, 'Text', 'Desired Input Type:', 'Position', [420 280 150 22]);
+uilabel(fig, 'Text', 'Desired Target:', 'Position', [420 280 150 22]);
 InputTypeDropdown = uidropdown(fig, ...
     'Items', {'r (Reference)', 'xbar (Equilibrium Point)'}, ...
     'Position', [530 280 250 22]);
@@ -110,9 +110,9 @@ r = uitextarea(fig, 'Position', [530 250 250 22], 'Value', defaultMatrixrStr);
 % OmegastarInput = uieditfield(fig, 'numeric', 'Position', [530 120 250 22], 'Value', 20);
 
 % Dropdown to select mode (Linear TC/Lyapanov TC)
-uilabel(fig, 'Text', 'Algorithm Mode:', 'Position', [420 150 100 22]);
+uilabel(fig, 'Text', 'Terminal Constaint', 'Position', [420 150 100 22]);
 ModeDropdown = uidropdown(fig, ...
-    'Items', {'Linear Terminal Constraints', 'Lyapanov Terminal Constraints'}, ...
+    'Items', {'Prediction-Based', 'Lyapunov-Based'}, ...
     'Position', [530 150 250 22]);
 
 % Nested function to toggle the OmegastarInput field
@@ -163,6 +163,7 @@ Qx = str2num(char(QxInput.Value)); %#ok<ST2NM>
 Qu = str2num(char(QuInput.Value)); %#ok<ST2NM>
 % Qv = str2num(char(QvInput.Value)); %#ok<ST2NM>
 Qv=100;
+Qv=eye(size(C, 1));
 DeltaT = DeltaTInput.Value;
 Prediction_Horizon = PredictionHorizonInput.Value;
 
@@ -221,7 +222,7 @@ MPCFunctions.validateInputs(A, B, C, D, Qx, Qu, Qv, Xconstraint(:,end), Xconstra
 [Ad, Bd, Cd,Dd, NoS, NoI, NoO] = MPCFunctions.initialize(A, B, C, D, DeltaT);
 
 % Compute MPC
-if strcmp(ModeDropdown.Value, 'Lyapanov Terminal Constraints') 
+if strcmp(ModeDropdown.Value, 'Lyapunov-Based') 
 
 [x, u_app,Sigmas] = MPCFunctions.computeMPCLyapanov(Ad, Bd, Cd,Dd,Xconstraint,Uconstraint,x0,r, NoS, NoI, NoO, Qx, Qu, Qv, DeltaT, Prediction_Horizon, Omegastar, n);
 
@@ -247,7 +248,6 @@ MN=null(X,"rational");
 
 M1=MN(1:NoS,:);
 N=MN(1+NoS+NoI:end,:);
-
-Theta=M1'*(M1'*M1)^-1*xbar;
+Theta=pinv(M1)*xbar;
 r=N*Theta;
 end
