@@ -82,9 +82,8 @@ Qx = [1 0; 0 1]
  The number of future steps the controller optimizes for.  
  **Example**: `10`
 
-14. **Omegastar**  
- A parameter used in the algorithm for manual optimization. Disabled in **Automatic** mode.
-Warning: If the chosen Omegastar is lower than the stable Omegastar (which is calculated by the algorithm) it might lead to REAP becoming unstable or unsafe.
+14. **Desired Target**  
+Desired value for the reference trajectory or desired steady-state configuration (Equilibrium point)
 15. **# Time Instants**  
  Total number of time steps for the simulation.  
  **Example**: `100`
@@ -93,7 +92,9 @@ Warning: If the chosen Omegastar is lower than the stable Omegastar (which is ca
  Time interval between successive steps.  
  **Example**: `0.2`
 
-
+16. **Terminal Constraint** 
+ The mode of the terminal constraints; could be prediction-based or Lyapunov-based.  
+ **Example**: `0.2`
 
 ### **Plots**
 17. **Select Plots**  
