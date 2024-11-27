@@ -66,35 +66,32 @@ Qx = [1 0; 0 1]
  Qu = [0.01]
 
 
-### **Initial and Desired Conditions**
 11. **Initial Condition** (\(x_0\))  
  Initial state of the system.  
  **Example**: `[0; 0]`
 
-12. **Desired** (\(r\))  
- Desired reference state or output.  
- **Example**: `[1; 0]`
+
 
 
 
 ### **Simulation Parameters**
-13. **Prediction Horizon**  
+12. **Prediction Horizon**  
  The number of future steps the controller optimizes for.  
  **Example**: `10`
 
-14. **Desired Target**  
+13. **Desired Target**  
 Desired value for the reference trajectory or desired steady-state configuration (Equilibrium point)
-15. **# Time Instants**  
+14. **# Time Instants**  
  Total number of time steps for the simulation.  
  **Example**: `100`
 
-16. **Sampling Period** (\(\Delta T\))  
+15. **Sampling Period** (\(\Delta T\))  
  Time interval between successive steps.  
  **Example**: `0.2`
 
 16. **Terminal Constraint** 
  The mode of the terminal constraints; could be prediction-based or Lyapunov-based.  
- **Example**: `0.2`
+
 
 ### **Plots**
 17. **Select Plots**  
