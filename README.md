@@ -31,8 +31,8 @@ If you use the DisREAP Toolbox, please use the following BibTeX entry:
 ```bibtex
 
 @INPROCEEDINGS{Amiri:DiscreteREAP,
-AUTHOR="Andr{\'e}s {Mohsen Amiri and Mehdi Hosseinzadeh",
-TITLE="Discrete-Time Implementation of Robust-to-Early Termination Model Predictive Control",
+AUTHOR=" {Mohsen Amiri and Mehdi Hosseinzadeh",
+TITLE="Practical Considerations for Implementing Robust-to-Early Termination Model Predictive Control",
 BOOKTITLE="..... ",
 ADDRESS="........",
 
