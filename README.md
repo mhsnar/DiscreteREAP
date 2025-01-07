@@ -1,7 +1,7 @@
 # Discrete Robust to Early Termination Model Predictive Control (DisREAP)
 
 ## 🛠️ Getting Started:
-1. **Extract the YALMIP zip file** to your desired location.
+1. **Extract the YALMIP zip file** to the location of the DisREAP file.
 2. **Run the `DisREAP_UI` function** in MATLAB.
 
 ## 🚀 Usage:
