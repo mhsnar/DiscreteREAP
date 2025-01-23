@@ -465,6 +465,7 @@ ds=0.001;
         hatLambda=hatLambda0;
         hat_u=hat_u0;
     end
+    x_pr =Abar*x0+Bbar*hat_u ;
     %Warm Starting
     hat_u_0=[];
     hat_lambda_x1_0=[];
@@ -517,7 +518,7 @@ ds=0.001;
     hat_lambda_omega_u1_eps_0=hat_lambda_omega_u1_eps;
     hat_lambda_omega_u2_eps_0=hat_lambda_omega_u2_eps;
 
-
+    
     hat_u_0=[hat_u_0; M2*theta+K*(x_pr(NoS*Prediction_Horizion-NoS+1:NoS*Prediction_Horizion)-M1*theta)];
     hat_lambda_x1_0=[hat_lambda_x1_0;hat_lambda_x1(NoS*Prediction_Horizion-NoS+1:NoS*Prediction_Horizion)];
     hat_lambda_x2_0=[hat_lambda_x2_0;hat_lambda_x2(NoS*Prediction_Horizion-NoS+1:NoS*Prediction_Horizion)];
