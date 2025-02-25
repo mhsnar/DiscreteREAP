@@ -2,12 +2,7 @@
 
 ## 🛠️ Getting Started:
 1. **Extract the YALMIP zip file** to the location of the DisREAP file.
-2. **Run the `DisREAP_UI` function** in MATLAB.
 
-## 🚀 Usage:
-1. **Import your system and desired configurations**:
-   - After running `DisREAP_UI`, import your system model and specify your desired configurations.
-2. **Execute the package** to start the control process.
 
 ## 📚 Examples:
 For guidance, the package includes two examples:
